@@ -69,5 +69,5 @@ static void ReadMemoryMappedFile()
 ---
 # Known Issues
 
-- None. Please report any on the [Issue Tracker](/issues/).
+- None. Please report any on the [Issue Tracker](https://github.com/WWYDF/TalkState/issues).
 ---
