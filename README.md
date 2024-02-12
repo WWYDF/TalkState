@@ -18,7 +18,7 @@ Sends active talking state to Memory. Supposed to be used in junction with the [
 4. Click `Install plugin...`
 5. Select the downloaded `.dll`.
 6. Click `Yes`.
-7. Scroll down, and make sure **TalkState** is enabled.
+7. Scroll down, and check the box next to **TalkState** to `Enabled`, with `KeyEvents` as well.
 8. Click `Apply`, then `OK`.
 9. Connect to a Server, and launch your game.
 
@@ -30,7 +30,7 @@ Sends active talking state to Memory. Supposed to be used in junction with the [
 ## Integrating with a different mod
 If you would like to use this to send talking data to your own mod, you certainly can.
 
-It uses a Memory Linked File @ `%temp%\gtfo_posaudio_mumlink` to store a string of the current state. My mod uses the following code to pull the data from the MLF to the BepInEx Plugin in C#.
+It uses a Memory Linked File @ `%temp%\posaudio_mumlink` to store a string of the current state. My mod uses the following code to pull the data from the Memory Linked File to the BepInEx Plugin in C#.
 ```cs
 static void ReadMemoryMappedFile()
 {
@@ -53,12 +53,11 @@ static void ReadMemoryMappedFile()
 
                 if (receivedData == "Talking")
                 {
-					character.ForcePlayerNoiseChange(Agents.Agent.NoiseType.Walk);
+			// do stuff;
                 }
             }
         }
-		// Console.WriteLine($"Sleeping...");
-        Thread.Sleep(6); // Sleep for 6 milliseconds.
+        Thread.Sleep(90); // Sleep for 90 milliseconds.
 		// Adjust update frequency if CPU performance is bad.
     }
 }

@@ -2,8 +2,8 @@
 // Created for using in junction with the Positional Audio Mod for GTFO. https://github.com/WWYDF/OpenPA/
 // Downloaded from GitHub here: https://github.com/WWYDF/TalkState/
 
-#include "include/MumbleAPI_v_1_0_x.h"
-#include "include/MumblePlugin_v_1_0_x.h"
+#include "MumbleAPI_v_1_0_x.h"
+#include "MumblePlugin_v_1_0_x.h"
 
 #include <cstring>
 #include <String>
@@ -243,30 +243,46 @@ void mumble_onServerDisconnected(mumble_connection_t connection) {
 	}
 }
 
+
 void mumble_onUserTalkingStateChanged(mumble_connection_t connection, mumble_userid_t userID, mumble_talking_state_t talkingState)
 {
 
-	// The possible values are contained in the TalkingState enum inside PluginComponent.h
-	switch (talkingState) {
-	case MUMBLE_TS_INVALID:
-		fstate = "Invalid\0";
-		break;
-	case MUMBLE_TS_PASSIVE:
-		fstate = "Passive\0";
-		break;
-	case MUMBLE_TS_TALKING:
-		fstate = "Talking\0";
-		break;
-	case MUMBLE_TS_WHISPERING:
-		fstate = "Whispering\0";
-		break;
-	case MUMBLE_TS_SHOUTING:
-		fstate = "Shouting\0";
-		break;
-	default:
-		fstate = "Unknown\0";
+	mumble_userid_t localUserID;
+	mumble_error_t error = mumAPI.getLocalUserID(ownID, connection, &localUserID);
+	if (error != MUMBLE_STATUS_OK) {
+		pluginLog("[ERROR]: Can't obtain ID of local user");
+		return;
 	}
 
-	UpdateMemoryMappedFileContents(fstate);
-}
+	if (localUserID == userID) {
+		pluginLog("[INFO]: YOU are talking!");
 
+		// The possible values are contained in the TalkingState enum inside PluginComponent.h
+		switch (talkingState) {
+		case MUMBLE_TS_INVALID:
+			fstate = "Invalid\0";
+			break;
+		case MUMBLE_TS_PASSIVE:
+			fstate = "Passive\0";
+			break;
+		case MUMBLE_TS_TALKING:
+			fstate = "Talking\0";
+			break;
+		case MUMBLE_TS_WHISPERING:
+			fstate = "Whispering\0";
+			break;
+		case MUMBLE_TS_SHOUTING:
+			fstate = "Shouting\0";
+			break;
+		default:
+			fstate = "Unknown\0";
+		}
+
+		UpdateMemoryMappedFileContents(fstate);
+	}
+	else {
+		pluginLog("[INFO]: THEY are talking!");
+	}
+
+	
+}
